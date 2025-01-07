@@ -1,7 +1,7 @@
 ### [Pull from Docker Hub](https://hub.docker.com/r/wiktorbgu/byedpi-hev-socks5-tunnel)
 
 ## Mikrotik settings  
-### Подробная инструкция настройки Mikrotik [habr.ru](https://habr.com/ru/articles/838452/) или [web.archive.org](https://web.archive.org/web/20241106205452/https://habr.com/ru/articles/838452/)
+### Подробная инструкция настройки Mikrotik [habr.ru](https://habr.com/ru/articles/838452/) или [web.archive.org](https://web.archive.org/web/*/https://habr.com/ru/articles/838452/) (на обоих ресурсах доступно только из-за границы)
 ---
 
 ```
@@ -15,8 +15,7 @@
 ```
 /container/config set registry-url=https://registry-1.docker.io tmpdir=/usb1/docker/pull 
 
-/container/envs/ add key=LOCAL_ROUTE name=byedpi-tun value="ip r a 192.168.0.0/16 via 192.168.254.1;ip r a 10.0.0.0/8 via 192.168.254.1;ip r a 172.16.0.0/12 via 192.168.254.1"
-/container/add remote-image=wiktorbgu/byedpi-hev-socks5-tunnel interface=BYEDPI-TUN cmd="--disorder 1 --auto=torst --tlsrec 1+s" root-dir=/usb1/docker/byedpi-hev-socks5-tunnel start-on-boot=yes envlist=byedpi-tun
+/container/add remote-image=wiktorbgu/byedpi-hev-socks5-tunnel:mikro interface=BYEDPI-TUN cmd="--disorder 1 --auto=torst --tlsrec 1+s" root-dir=/usb1/docker/byedpi-hev-socks5-tunnel-mikro start-on-boot=yes
 ```
 ### Table routing
 
@@ -35,5 +34,3 @@
 ```
 /container start [find interface=BYEDPI-TUN]
 ```
----
-### [GitHub](https://github.com/wiktorbgu/byedpi-hev-socks5-tunnel)
