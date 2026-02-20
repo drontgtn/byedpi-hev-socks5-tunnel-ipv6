@@ -3,7 +3,7 @@
 TUN="${TUN:-tun0}"
 MTU="${MTU:-9000}"
 IPV4="${IPV4:-198.18.0.1}"
-IPV6="${IPV6:-}"
+IPV6="${IPV6:-fc00::1}"
 
 MARK="${MARK:-438}"
 
@@ -44,6 +44,15 @@ config_route() {
   echo "ip route add 172.16.0.0/12 via $GATEWAY dev eth0" >> /route.sh
   echo "ip route add 192.168.0.0/16 via $GATEWAY dev eth0" >> /route.sh
   echo "${OTHER_ROUTE}" >> /route.sh
+    if [ -n "${IPV6}" ]; then
+    echo "ip -6 rule add from all uidrange 1000-1000 lookup 110 pref 28000" >> /route.sh
+    echo "ip -6 route add default via ${IPV6} dev ${TUN} metric 1" >> /route.sh
+    echo "ip -6 route add default via $GATEWAY dev eth0 metric 10" >> /route.sh
+    # exclude local IPv6 networks
+    echo "ip -6 route add fc00::/7 via $GATEWAY dev eth0" >> /route.sh
+    echo "ip -6 route add fe80::/10 via $GATEWAY dev eth0" >> /route.sh
+    echo "ip -6 route add ::1/128 via $GATEWAY dev eth0" >> /route.sh
+  fi
 }
 
 run() {
